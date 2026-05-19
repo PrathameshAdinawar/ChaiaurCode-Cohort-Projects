@@ -20,10 +20,20 @@ class UserService{
         const existingUserWithEmail = await this.getUserByEmail(email)
         if(existingUserWithEmail) throw new Error(`user with email ${email} already exists`)
 
+        //Calculate salt and hash the password
         const salt = randomBytes(16).toString('hex')
         const hash = createHmac('sha256',salt).update(password).digest('hex')
 
-        await db.insert(usersTable).values({email,fullName})
+        //Create user in the DB
+        const userInsertResult = await db.insert(usersTable).values({email,fullName,password:hash,salt}).returning({
+            id:usersTable.id
+        })
+
+        if(!userInsertResult || userInsertResult.length === 0) throw new Error(`Something went wrong while creating a user`)
+
+        return {
+            id:userInsertResult[0]?.id
+        }
     }
 }
 
