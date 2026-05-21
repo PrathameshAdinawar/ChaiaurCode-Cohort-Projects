@@ -6,4 +6,4 @@ export const createUserWithEmailAndPasswordInput = z.object({
     password:z.string().describe('Password of the user')
 }) 
 
-export type CreateUserWithEmailAndPasswordInput = z.infer<typeof createUserWithEmailAndPasswordInput>
+export type CreateUserWithEmailAndPasswordInputType = z.infer<typeof createUserWithEmailAndPasswordInput>
